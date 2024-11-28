@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Simple Calculator</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background-color: #f4f4f4;
+      }
+
+      .calculator {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+        width: 230px;
+      }
+
+      .calculator input {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        font-size: 18px;
+        text-align: right;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+      }
+
+      .calculator button {
+        width: 23%;
+        padding: 10px;
+        margin: 5px;
+        font-size: 18px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      .calculator button:hover {
+        background-color: #0056b3;
+      }
+
+      .error-message {
+        color: red;
+        font-size: 14px;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="calculator">
+      <h2>Calculator</h2>
+      <input type="text" id="display" disabled />
+      <div class="error-message" id="error-message"></div>
+      <div>
+        <button onclick="appendToDisplay('1')">1</button>
+        <button onclick="appendToDisplay('2')">2</button>
+        <button onclick="appendToDisplay('3')">3</button>
+        <button onclick="appendToDisplay('+')">+</button>
+      </div>
+      <div>
+        <button onclick="appendToDisplay('4')">4</button>
+        <button onclick="appendToDisplay('5')">5</button>
+        <button onclick="appendToDisplay('6')">6</button>
+        <button onclick="appendToDisplay('-')">-</button>
+      </div>
+      <div>
+        <button onclick="appendToDisplay('7')">7</button>
+        <button onclick="appendToDisplay('8')">8</button>
+        <button onclick="appendToDisplay('9')">9</button>
+        <button onclick="appendToDisplay('*')">*</button>
+      </div>
+      <div>
+        <button onclick="appendToDisplay('0')">0</button>
+        <button onclick="clearDisplay()">C</button>
+        <button onclick="calculate()">=</button>
+        <button onclick="appendToDisplay('/')">/</button>
+      </div>
+    </div>
+
+    <script>
+      // Function to append values to the display
+      function appendToDisplay(value) {
+        const display = document.getElementById("display");
+        const currentDisplay = display.value.trim();
+
+        // Prevent consecutive operators or starting with an operator
+        if (
+          isOperator(value) &&
+          (currentDisplay === "" ||
+            isOperator(currentDisplay.charAt(currentDisplay.length - 1)))
+        ) {
+          return;
+        }
+
+        display.value += value;
+        clearError();
+      }
+
+      // Function to clear the display
+      function clearDisplay() {
+        const display = document.getElementById("display");
+        display.value = "";
+        clearError();
+      }
+
+      // Function to calculate the result
+      function calculate() {
+        const display = document.getElementById("display");
+        const errorMessage = document.getElementById("error-message");
+        const expression = display.value.trim();
+
+        // Check for division by zero
+        if (expression.includes("/0")) {
+          showError("Error: Division by zero");
+          return;
+        }
+
+        // Validate and calculate the result
+        try {
+          const result = eval(expression);
+          if (isNaN(result)) {
+            showError("Invalid calculation");
+          } else {
+            display.value = result;
+            clearError();
+          }
+        } catch (error) {
+          showError("Error: Invalid input");
+        }
+      }
+
+      // Function to check if the character is an operator
+      function isOperator(value) {
+        return ["+", "-", "*", "/"].includes(value);
+      }
+
+      // Function to show error messages
+      function showError(message) {
+        const errorMessage = document.getElementById("error-message");
+        errorMessage.textContent = message;
+      }
+
+      // Function to clear error messages
+      function clearError() {
+        const errorMessage = document.getElementById("error-message");
+        errorMessage.textContent = "";
+      }
+    </script>
+  </body>
+</html>
